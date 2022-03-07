@@ -1,0 +1,39 @@
+body {
+  overflow: hidden;
+}
+
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+
+.n {
+  position: absolute;
+  top: 100px;
+  height: 10px;
+  width: 200px;
+  background: #000;
+}
+.n1 {
+  top: 200px;
+}
+.n2 {
+  top: 300px;
+}
+.n3 {
+  top: 400px;
+}
+.n4 {
+  top: 500px;
+}
+
+#block {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  background: #485a6c;
+  color: #fff;
+}
