@@ -1,4 +1,9 @@
+import Sketch from './experience'
 import './style.css'
+
+let sketch = new Sketch({
+  dom: document.getElementById('container'),
+})
 
 let speed = 0
 let position = 0

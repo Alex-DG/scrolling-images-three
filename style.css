@@ -34,6 +34,19 @@ body {
   width: 100px;
   height: 100px;
   position: absolute;
-  background: #485a6c;
+  background: #ea3434;
   color: #fff;
+  z-index: 100;
+}
+
+#container {
+  width: 100vw;
+  height: 100vh;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  z-index: -1;
+  pointer-events: none;
 }
