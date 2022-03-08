@@ -19,6 +19,8 @@ export default class Sketch {
     this.renderer.setClearColor(0xeeeeee, 1)
     this.renderer.outputEncoding = THREE.sRGBEncoding
 
+    this.textureLoader = new THREE.TextureLoader()
+
     this.container.appendChild(this.renderer.domElement)
 
     this.camera = new THREE.PerspectiveCamera(
@@ -44,6 +46,25 @@ export default class Sketch {
     this.render()
     this.setupResize()
     // this.settings();
+
+    this.handleImages()
+  }
+
+  handleImages() {
+    let images = [...document.querySelectorAll('img')]
+    images.forEach((img, i) => {
+      // const aspect = img.naturalWidth / img.naturalHeight or 1.4
+
+      let mat = this.material.clone()
+      mat.uniforms.texture1.value = this.textureLoader.load(img.src)
+      mat.uniforms.texture1.value.needsUpdate = true
+
+      let geo = new THREE.PlaneBufferGeometry(1.4, 1, 20, 20)
+      let mesh = new THREE.Mesh(geo, mat)
+      mesh.position.y = i * 1.2
+
+      this.scene.add(mesh)
+    })
   }
 
   settings() {
@@ -75,8 +96,9 @@ export default class Sketch {
       },
       side: THREE.DoubleSide,
       uniforms: {
-        time: { type: 'f', value: 0 },
-        resolution: { type: 'v4', value: new THREE.Vector4() },
+        time: { value: 0 },
+        texture1: { value: null },
+        resolution: { value: new THREE.Vector4() },
         uvRate1: {
           value: new THREE.Vector2(1, 1),
         },
