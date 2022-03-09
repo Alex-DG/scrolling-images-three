@@ -25,12 +25,15 @@ const tick = () => {
   objs.forEach((o, i) => {
     o.dist = Math.min(Math.abs(position - i), 1)
     o.dist = 1 - o.dist ** 2
-
     elems[i].style.transform = `scale(${1 + 0.4 * o.dist})`
 
     // o.dist += speed * 0.01
     // o.dist = o.dist % 1
     // elems[i].style.transform = `translateX(${o.dist * 1000}%)`
+
+    let scale = 1 + 0.1 * o.dist
+    sketch.meshes[i].position.y = i * 1.2 - position * 1.2
+    sketch.meshes[i].scale.set(scale, scale, scale)
   })
 
   rounded = Math.round(position)

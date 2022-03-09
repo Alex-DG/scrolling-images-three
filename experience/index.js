@@ -47,6 +47,10 @@ export default class Sketch {
     this.setupResize()
     // this.settings();
 
+    this.materials = []
+    this.meshes = []
+    this.groups = []
+
     this.handleImages()
   }
 
@@ -56,14 +60,23 @@ export default class Sketch {
       // const aspect = img.naturalWidth / img.naturalHeight or 1.4
 
       let mat = this.material.clone()
+      this.materials.push(mat)
+      let group = new THREE.Group()
+
       mat.uniforms.texture1.value = this.textureLoader.load(img.src)
       mat.uniforms.texture1.value.needsUpdate = true
 
       let geo = new THREE.PlaneBufferGeometry(1.4, 1, 20, 20)
       let mesh = new THREE.Mesh(geo, mat)
+      group.add(mesh)
+      this.groups.push(group)
+      this.scene.add(group)
+      this.meshes.push(mesh)
       mesh.position.y = i * 1.2
 
-      this.scene.add(mesh)
+      group.rotation.x = -0.3
+      group.rotation.y = -0.3
+      group.rotation.z = -0.3
     })
   }
 
@@ -109,10 +122,9 @@ export default class Sketch {
       fragmentShader: fragment,
     })
 
-    this.geometry = new THREE.PlaneGeometry(1, 1, 1, 1)
-
-    this.plane = new THREE.Mesh(this.geometry, this.material)
-    this.scene.add(this.plane)
+    // this.geometry = new THREE.PlaneGeometry(1, 1, 1, 1)
+    // this.plane = new THREE.Mesh(this.geometry, this.material)
+    // this.scene.add(this.plane)
   }
 
   stop() {
@@ -131,7 +143,11 @@ export default class Sketch {
 
     this.time += 0.05
 
-    this.material.uniforms.time.value = this.time
+    this.materials?.forEach((m) => {
+      m.uniforms.time.value = this.time
+    })
+
+    // this.material.uniforms.time.value = this.time
 
     requestAnimationFrame(this.render.bind(this))
 
