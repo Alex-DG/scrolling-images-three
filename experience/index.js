@@ -13,7 +13,7 @@ export default class Sketch {
     this.width = this.container.offsetWidth
     this.height = this.container.offsetHeight
 
-    this.renderer = new THREE.WebGLRenderer()
+    this.renderer = new THREE.WebGLRenderer({ antialias: true })
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setSize(this.width, this.height)
     this.renderer.setClearColor(0xeeeeee, 1)
@@ -56,6 +56,7 @@ export default class Sketch {
 
   handleImages() {
     let images = [...document.querySelectorAll('img')]
+
     images.forEach((img, i) => {
       // const aspect = img.naturalWidth / img.naturalHeight or 1.4
 
@@ -75,8 +76,8 @@ export default class Sketch {
       mesh.position.y = i * 1.2
 
       group.rotation.x = -0.3
-      group.rotation.y = -0.3
-      group.rotation.z = -0.3
+      group.rotation.y = -0.5
+      group.rotation.z = -0.1
     })
   }
 
@@ -102,29 +103,25 @@ export default class Sketch {
   }
 
   addObjects() {
-    let that = this
     this.material = new THREE.ShaderMaterial({
       extensions: {
         derivatives: '#extension GL_OES_standard_derivatives : enable',
       },
       side: THREE.DoubleSide,
       uniforms: {
-        time: { value: 0 },
+        time: { value: 0.0 },
         texture1: { value: null },
         resolution: { value: new THREE.Vector4() },
+        distanceFromCenter: { value: 0.0 },
         uvRate1: {
           value: new THREE.Vector2(1, 1),
         },
       },
       // wireframe: true,
-      // transparent: true,
+      transparent: true,
       vertexShader: vertex,
       fragmentShader: fragment,
     })
-
-    // this.geometry = new THREE.PlaneGeometry(1, 1, 1, 1)
-    // this.plane = new THREE.Mesh(this.geometry, this.material)
-    // this.scene.add(this.plane)
   }
 
   stop() {

@@ -10,6 +10,27 @@ body {
   color: #2c3e50;
 }
 
+img {
+  background: #000;
+}
+
+ul {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 100;
+  border: 1px solid #000;
+  width: 200px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  font-size: 50px;
+  border: 1px solid #000;
+}
+
 .n {
   position: absolute;
   top: 100px;
