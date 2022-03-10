@@ -1,6 +1,7 @@
 import Sketch from './experience'
 import './style.css'
 import gsap from 'gsap'
+import * as THREE from 'three'
 
 let sketch = new Sketch({
   dom: document.getElementById('container'),
@@ -11,7 +12,6 @@ let attracktTo = 0
 let speed = 0
 let position = 0
 let rounded = 0
-let block = document.getElementById('block')
 let wrap = document.getElementById('wrap')
 let elems = [...document.querySelectorAll('.n')]
 
@@ -21,18 +21,28 @@ window.addEventListener('wheel', (e) => {
 
 let objs = Array(5).fill({ dist: 0 })
 
+const minMaxPosition = () => {
+  let pos = position
+  if (position >= 0 && position <= elems.length - 1) {
+    pos += speed
+  } else {
+    const smooth =
+      position < 1
+        ? THREE.MathUtils.lerp(position, Math.ceil(position), 0.2)
+        : THREE.MathUtils.lerp(position, Math.floor(position), 0.2)
+    pos = smooth
+  }
+  return pos
+}
+
 const tick = () => {
-  position += speed
+  position = minMaxPosition()
   speed *= 0.8
 
   objs.forEach((o, i) => {
     o.dist = Math.min(Math.abs(position - i), 1)
     o.dist = 1 - o.dist ** 2
     elems[i].style.transform = `scale(${1 + 0.4 * o.dist})`
-
-    // o.dist += speed * 0.01
-    // o.dist = o.dist % 1
-    // elems[i].style.transform = `translateX(${o.dist * 1000}%)`
 
     let scale = 1 + 0.1 * o.dist
     sketch.meshes[i].position.y = i * 1.2 - position * 1.2
@@ -48,8 +58,6 @@ const tick = () => {
     position += -(position - attracktTo) * 0.04
   } else {
     position += Math.sign(diff) * Math.pow(Math.abs(diff), 0.7) * 0.015
-
-    // block.style.transform = `translate(0, ${position * 100}px)`
     wrap.style.transform = `translate(0, ${-position * 100}px)`
   }
 

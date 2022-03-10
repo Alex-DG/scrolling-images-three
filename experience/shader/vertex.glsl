@@ -1,5 +1,6 @@
 uniform float time;
 uniform float distanceFromCenter;
+uniform float bendFactor;
 uniform vec2 pixels;
 
 varying vec2 vUv;
@@ -12,8 +13,8 @@ void main() {
 
   vec3 pos = position;
 
-  pos.y += sin(PI*uv.x)*0.025;
-  pos.z += sin(PI*uv.x)*0.025;
+  pos.y += sin(PI*uv.x)*bendFactor;
+  pos.z += sin(PI*uv.x)*bendFactor;
 
   pos.y += sin(time * 0.3) * 0.02;
   vUv.y -= sin(time * 0.3) * 0.02;

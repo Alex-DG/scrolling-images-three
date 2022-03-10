@@ -2,5 +2,5 @@
 
 TODO:
 
-- on click rotate front position
-- clamp scrolling values to stay within the page
+- raycaster: on click rotate front position
+- clamp scrolling values to stay within the page DONE

@@ -4,6 +4,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import fragment from './shader/fragment.glsl'
 import vertex from './shader/vertex.glsl'
 
+import gsap from 'gsap'
+
 export default class Sketch {
   constructor(options) {
     this.scene = new THREE.Scene()
@@ -18,6 +20,9 @@ export default class Sketch {
     this.renderer.setSize(this.width, this.height)
     this.renderer.setClearColor(0xeeeeee, 1)
     this.renderer.outputEncoding = THREE.sRGBEncoding
+
+    this.raycaster = new THREE.Raycaster()
+    this.pointer = new THREE.Vector2(-1, -1)
 
     this.textureLoader = new THREE.TextureLoader()
 
@@ -40,18 +45,32 @@ export default class Sketch {
     this.time = 0
 
     this.isPlaying = true
+    this.isShowing = false
+    this.resetRotation = new THREE.Vector3()
+    this.currentSelection = null
 
     this.addObjects()
     this.resize()
     this.render()
     this.setupResize()
-    // this.settings();
 
     this.materials = []
     this.meshes = []
     this.groups = []
 
     this.handleImages()
+
+    this.onPointerMove = this.onPointerMove.bind(this)
+
+    window.addEventListener('pointermove', this.onPointerMove)
+  }
+
+  onPointerMove(event) {
+    // calculate pointer position in normalized device coordinates
+    // (-1 to +1) for both components
+
+    this.pointer.x = (event.clientX / window.innerWidth) * 2 - 1
+    this.pointer.y = -(event.clientY / window.innerHeight) * 2 + 1
   }
 
   handleImages() {
@@ -74,20 +93,15 @@ export default class Sketch {
       this.scene.add(group)
       this.meshes.push(mesh)
       mesh.position.y = i * 1.2
+      mesh.name = `photo-${i}`
+      mesh.userData = {
+        index: i,
+      }
 
       group.rotation.x = -0.3
       group.rotation.y = -0.5
       group.rotation.z = -0.1
     })
-  }
-
-  settings() {
-    let that = this
-    this.settings = {
-      progress: 0,
-    }
-    this.gui = new dat.GUI()
-    this.gui.add(this.settings, 'progress', 0, 1, 0.01)
   }
 
   setupResize() {
@@ -113,6 +127,7 @@ export default class Sketch {
         texture1: { value: null },
         resolution: { value: new THREE.Vector4() },
         distanceFromCenter: { value: 0.0 },
+        bendFactor: { value: 0.025 },
         uvRate1: {
           value: new THREE.Vector2(1, 1),
         },
@@ -135,14 +150,91 @@ export default class Sketch {
     }
   }
 
+  showPhoto(index) {
+    if (!this.isShowing) {
+      this.clearTweens()
+      this.isShowing = true
+      this.currentSelection = index
+      const mesh = this.meshes[index]
+      this.resetRotation.copy(mesh.rotation.clone())
+
+      const tl = gsap.timeline()
+      tl.to(mesh.rotation, {
+        x: 0.2,
+        y: 0.5,
+        z: 0,
+        duration: 0.35,
+        ease: 'power3.inOut',
+      })
+      tl.to(this.camera.position, {
+        z: 1.7,
+        duration: 0.35,
+        ease: 'power3.inOut',
+      })
+      gsap.to(this.materials[this.currentSelection].uniforms.bendFactor, {
+        value: 0.0,
+        duration: 0.5,
+        ease: 'power3.inOut',
+      })
+    }
+  }
+
+  resetPhoto() {
+    if (typeof this.currentSelection === 'number') {
+      this.clearTweens()
+      const mesh = this.meshes[this.currentSelection]
+      const tl = gsap.timeline()
+      tl.to(mesh.rotation, {
+        x: 0,
+        y: 0,
+        z: 0,
+        duration: 0.35,
+        ease: 'power3.inOut',
+      })
+      tl.to(this.camera.position, {
+        z: 2,
+        duration: 0.35,
+        ease: 'power3.inOut',
+      })
+      gsap.to(this.materials[this.currentSelection].uniforms.bendFactor, {
+        value: 0.025,
+        duration: 0.5,
+        ease: 'power3.inOut',
+      })
+
+      this.currentSelection = null
+    }
+  }
+
+  clearTweens() {
+    gsap.globalTimeline.clear()
+  }
+
   render() {
     if (!this.isPlaying) return
 
     this.time += 0.05
 
-    this.materials?.forEach((m) => {
-      m.uniforms.time.value = this.time
+    this.materials?.forEach((m, i) => {
+      if (this.currentSelection !== i) {
+        m.uniforms.time.value = this.time
+      }
     })
+
+    // update the picking ray with the camera and pointer position
+    this.raycaster.setFromCamera(this.pointer, this.camera)
+
+    // calculate objects intersecting the picking ray
+    const intersects = this.raycaster.intersectObjects(this.scene.children)
+    if (intersects.length > 0) {
+      const photo = intersects[0].object
+      this.showPhoto(photo.userData.index)
+    } else {
+      this.isShowing = false
+      this.resetPhoto()
+    }
+
+    // console.log({ isShowing: this.isShowing })
 
     // this.material.uniforms.time.value = this.time
 
