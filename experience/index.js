@@ -160,14 +160,14 @@ export default class Sketch {
 
       const tl = gsap.timeline()
       tl.to(mesh.rotation, {
-        x: 0.2,
+        x: 0.19,
         y: 0.5,
         z: 0,
         duration: 0.35,
         ease: 'power3.inOut',
       })
       tl.to(this.camera.position, {
-        z: 1.7,
+        x: -0.8,
         duration: 0.35,
         ease: 'power3.inOut',
       })
@@ -193,6 +193,7 @@ export default class Sketch {
       })
       tl.to(this.camera.position, {
         z: 2,
+        x: 0,
         duration: 0.35,
         ease: 'power3.inOut',
       })
