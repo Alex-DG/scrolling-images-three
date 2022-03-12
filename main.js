@@ -84,8 +84,9 @@ const tick = () => {
     position += -(position - attracktTo) * 0.04
   } else {
     position += Math.sign(diff) * Math.pow(Math.abs(diff), 0.7) * 0.015
-    wrap.style.transform = `translate(0, ${-position * 100}px)`
   }
+
+  wrap.style.transform = `translate(0, ${-position * 100}px)`
 
   window.requestAnimationFrame(tick)
 }
