@@ -19,6 +19,7 @@ let position = 0
 let rounded = 0
 let wrap = document.getElementById('wrap')
 let elems = [...document.querySelectorAll('.n')]
+let dots = [...document.querySelectorAll('li')]
 
 if (isMobile) {
   let startY
@@ -57,11 +58,17 @@ const tick = () => {
   speed *= 0.8
 
   objs.forEach((o, i) => {
-    console.log({ o })
     o.dist = Math.min(Math.abs(position - i), 1)
     o.dist = 1 - o.dist ** 2
     elems[i].style.transform = `scale(${1 + 0.4 * o.dist})`
     elems[i].style.opacity = `${o.dist}`
+    dots[i].style.opacity = `${o.dist + 0.5}`
+
+    if (Math.ceil(o.dist) === 1) {
+      elems[i].style.display = 'block'
+    } else {
+      elems[i].style.display = 'none'
+    }
 
     let scale = 1 + 0.25 * o.dist
     sketch.meshes[i].position.y = i * 1.4 - position * 1.4

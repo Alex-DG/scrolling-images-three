@@ -13,25 +13,53 @@ img {
   background: #000;
 }
 
-ul {
+.nav-wrapper {
   position: fixed;
   top: 0;
   right: 0;
   z-index: 100;
-  border: 1px solid #000;
-  width: 200px;
+
+  width: 20%;
   list-style: none;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 100;
+}
+
+ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  justify-content: center;
+  align-items: center;
   margin: 0;
   padding: 0;
 }
 
 li {
-  font-size: 50px;
-  border: 1px solid #000;
+  height: 25px;
+  width: 25px;
+  background-color: rgb(49, 46, 46);
+  border-radius: 50%;
+  display: inline-block;
+  border: 4px solid rgb(49, 46, 46);
+  /* transition: opacity 1s ease-in-out; */
 }
 
 .n {
   position: absolute;
+  display: none;
   top: 100px;
   height: auto;
   width: auto;
