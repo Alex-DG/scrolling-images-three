@@ -7,7 +7,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
 }
 
 img {
@@ -34,10 +33,16 @@ li {
 .n {
   position: absolute;
   top: 100px;
-  height: 10px;
-  width: 200px;
-  background: #000;
+  height: auto;
+  width: auto;
+  background: transparent;
+  transition: opacity 0.3s;
+  margin: 0 0 0 2em;
 }
+.n > img {
+  display: none;
+}
+
 .n1 {
   top: 200px;
 }
@@ -58,6 +63,7 @@ li {
   background: #ea3434;
   color: #fff;
   z-index: 100;
+  display: none;
 }
 
 #container {

@@ -25,14 +25,14 @@ if (isMobile) {
 
   window.addEventListener('touchmove', (evt) => {
     const deltaY = evt.touches[0].clientY - startY
-    speed += deltaY * 0.0003
+    speed += deltaY * 0.00003
   })
   window.addEventListener('touchstart', (e) => {
     startY = e.touches[0].clientY
   })
 } else {
   window.addEventListener('wheel', (event) => {
-    speed += event.deltaY * 0.0003
+    speed += event.deltaY * 0.0002
   })
 }
 
@@ -57,12 +57,14 @@ const tick = () => {
   speed *= 0.8
 
   objs.forEach((o, i) => {
+    console.log({ o })
     o.dist = Math.min(Math.abs(position - i), 1)
     o.dist = 1 - o.dist ** 2
     elems[i].style.transform = `scale(${1 + 0.4 * o.dist})`
+    elems[i].style.opacity = `${o.dist}`
 
-    let scale = 1 + 0.1 * o.dist
-    sketch.meshes[i].position.y = i * 1.2 - position * 1.2
+    let scale = 1 + 0.25 * o.dist
+    sketch.meshes[i].position.y = i * 1.4 - position * 1.4
     sketch.meshes[i].scale.set(scale, scale, scale)
     sketch.meshes[i].material.uniforms.distanceFromCenter.value = o.dist
   })

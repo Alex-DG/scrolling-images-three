@@ -11,11 +11,10 @@ export default class Sketch {
     this.scene = new THREE.Scene()
 
     this.container = options.dom
-
     this.width = this.container.offsetWidth
     this.height = this.container.offsetHeight
 
-    this.renderer = new THREE.WebGLRenderer({ antialias: true })
+    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setSize(this.width, this.height)
     this.renderer.setClearColor(0xeeeeee, 1)
@@ -96,6 +95,8 @@ export default class Sketch {
       mesh.name = `photo-${i}`
       mesh.userData = {
         index: i,
+        project: `My Project ${i}`,
+        github: 'https://github.com/alex-dg',
       }
 
       group.rotation.x = -0.3
@@ -148,6 +149,30 @@ export default class Sketch {
       this.render()
       this.isPlaying = true
     }
+  }
+
+  showDomDetails(data) {
+    console.log({ data })
+    this.projectName.innerText = data.project
+    this.projectUrl.innerText = data.github
+
+    const tl = gsap.timeline()
+    tl.to(this.project, {
+      opacity: 1,
+      display: 'flex',
+      duration: 1,
+      ease: 'power3.out',
+    })
+    tl.to(this.projectName, {
+      opacity: 1,
+      duration: 0.5,
+      ease: 'power3.out',
+    })
+    tl.to(this.projectUrl, {
+      opacity: 1,
+      duration: 0.5,
+      ease: 'power3.out',
+    })
   }
 
   showPhoto(index) {
@@ -216,22 +241,22 @@ export default class Sketch {
     this.time += 0.05
 
     this.materials?.forEach((m, i) => {
-      if (this.currentSelection !== i) {
-        m.uniforms.time.value = this.time
-      }
+      m.uniforms.time.value = this.time
     })
 
     // update the picking ray with the camera and pointer position
-    // this.raycaster.setFromCamera(this.pointer, this.camera)
+    this.raycaster.setFromCamera(this.pointer, this.camera)
 
-    // // calculate objects intersecting the picking ray
+    // calculate objects intersecting the picking ray
     // const intersects = this.raycaster.intersectObjects(this.scene.children)
-    // if (intersects.length > 0) {
+    // if (intersects.length > 0 && !this.isProjectOpen) {
     //   const photo = intersects[0].object
-    //   this.showPhoto(photo.userData.index)
+    //   this.isProjectOpen = true
+    //   // this.showDomDetails(photo.userData)
+    //   // this.showPhoto(photo.userData.index)
     // } else {
     //   this.isShowing = false
-    //   this.resetPhoto()
+    //   // this.resetPhoto()
     // }
 
     // console.log({ isShowing: this.isShowing })
