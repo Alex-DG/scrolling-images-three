@@ -3,6 +3,11 @@ import './style.css'
 import gsap from 'gsap'
 import * as THREE from 'three'
 
+const isMobile =
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  )
+console.log({ isMobile })
 let sketch = new Sketch({
   dom: document.getElementById('container'),
 })
@@ -15,9 +20,21 @@ let rounded = 0
 let wrap = document.getElementById('wrap')
 let elems = [...document.querySelectorAll('.n')]
 
-window.addEventListener('wheel', (e) => {
-  speed += e.deltaY * 0.0003
-})
+if (isMobile) {
+  let startY
+
+  window.addEventListener('touchmove', (evt) => {
+    const deltaY = evt.touches[0].clientY - startY
+    speed += deltaY * 0.0003
+  })
+  window.addEventListener('touchstart', (e) => {
+    startY = e.touches[0].clientY
+  })
+} else {
+  window.addEventListener('wheel', (event) => {
+    speed += event.deltaY * 0.0003
+  })
+}
 
 let objs = Array(5).fill({ dist: 0 })
 

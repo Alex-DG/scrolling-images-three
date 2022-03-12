@@ -222,17 +222,17 @@ export default class Sketch {
     })
 
     // update the picking ray with the camera and pointer position
-    this.raycaster.setFromCamera(this.pointer, this.camera)
+    // this.raycaster.setFromCamera(this.pointer, this.camera)
 
-    // calculate objects intersecting the picking ray
-    const intersects = this.raycaster.intersectObjects(this.scene.children)
-    if (intersects.length > 0) {
-      const photo = intersects[0].object
-      this.showPhoto(photo.userData.index)
-    } else {
-      this.isShowing = false
-      this.resetPhoto()
-    }
+    // // calculate objects intersecting the picking ray
+    // const intersects = this.raycaster.intersectObjects(this.scene.children)
+    // if (intersects.length > 0) {
+    //   const photo = intersects[0].object
+    //   this.showPhoto(photo.userData.index)
+    // } else {
+    //   this.isShowing = false
+    //   this.resetPhoto()
+    // }
 
     // console.log({ isShowing: this.isShowing })
 
